@@ -1,0 +1,31 @@
+import pandas as pd
+import numpy as np
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
+from sklearn.svm import SVC
+import pickle
+
+# Load the dataset
+dataset = pd.read_csv('https://raw.githubusercontent.com/shrutim250/DiabetiesPrediction/main/diabetes.csv')
+
+# Separate features and target
+X = dataset.drop('Outcome', axis=1)
+y = dataset['Outcome']
+
+# Split the data
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
+
+# Feature scaling
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+# Train the model
+model = SVC(kernel='linear', probability=True, random_state=0)
+model.fit(X_train, y_train)
+
+# Save the model
+with open('diabetes_model.pkl', 'wb') as file:
+    pickle.dump(model, file)
+
+print("Model saved as 'diabetes_model.pkl'")
